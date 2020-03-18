@@ -1,23 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import Button from '@material-ui/core/Button'
+import { Typography } from '@material-ui/core';
+
+const useTimer: () => [boolean, React.Dispatch<React.SetStateAction<boolean>>, number] = () => {
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [elapsedMs, setElapsedMs] = useState(0);
+
+  const tick = (start: number) => setElapsedMs(new Date().getTime() - start);
+  useEffect( () => {
+    if (!timerRunning) return;
+    const start = new Date().getTime();
+    const timerID = setInterval(
+      () => tick(start), 1000
+    )
+    return () => clearInterval(timerID)
+  }, [timerRunning]);
+  return [timerRunning, setTimerRunning, elapsedMs];
+}
+
+const useCountDown = () => {
+  
+}
 
 function App() {
+  const [timerRunning, setTimerRunning, elapsedMs] = useTimer();
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Typography>{Math.floor(elapsedMs / 1000)}</Typography>
+        <Button onClick={ () => setTimerRunning(!timerRunning)}>
+          { timerRunning ? "Stop" : "Start"}
+        </Button>
       </header>
     </div>
   );
