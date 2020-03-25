@@ -17,7 +17,6 @@ const useStopwatch = () => {
     return () => clearInterval(timerID)
   }, [isRunning, startMs])
 
-  console.log('hoge')
   return {
     isRunning,
     elapsedMs,
