@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import 'semantic-ui-css/semantic.min.css'
-import { Button, Grid } from 'semantic-ui-react'
+import { Button, Grid, Input } from 'semantic-ui-react'
 
 const useStopwatch = () => {
   const [isRunning, setIsRunning] = useState(false)
@@ -13,9 +13,7 @@ const useStopwatch = () => {
     if (!isRunning) return
 
     const tick = () => setElapsedMs(Date.now() - startMs)
-    const timerID = setInterval(
-      () => tick(), 1000
-    )
+    const timerID = setInterval(() => tick(), 1000)
     return () => clearInterval(timerID)
   }, [isRunning, startMs])
 
@@ -55,37 +53,33 @@ const useCountDown = (remaining: number) => {
     setInitialMs(ms)
     _setRemainingMs(ms)
   }
-  return {
-    remainingMs,
-    isRunning,
-    start,
-    setRemainingMs,
-    reset,
-    stop
-  } as const
+  return { remainingMs, isRunning, start, setRemainingMs, reset, stop } as const
 }
 
 const toString = (ms: number) => {
   const h = Math.floor(ms / 1000 / 60 / 60)
   const m = Math.floor(ms / 1000 / 60 - h * 60)
   const s = Math.ceil(ms / 1000 - m * 60)
-  return `${h > 0 ? h + ' : ' : ''}${('00' + m).slice(-2)} '${('00' + s).slice(-2)}`
+  return `${h > 0 ? h + ' : ' : ''}${('00' + m).slice(-2)} ' ${('00' + s).slice(
+    -2
+  )}`
 }
 
 function App () {
-  const { isRunning, start, stop, reset, remainingMs } = useCountDown(1000 * 60 * 25)
+  const { isRunning, start, stop, reset, remainingMs } = useCountDown(
+    1000 * 60 * 25
+  )
 
   return (
     <div className="App">
       <header className="App-header">
         <p>{toString(remainingMs)}</p>
         <Grid>
-          <Button onClick={(isRunning ? stop : start)}>
+          <Input placeholder="To Do"></Input>
+          <Button onClick={isRunning ? stop : start}>
             {isRunning ? 'Stop' : 'Start'}
           </Button>
-          <Button onClick={reset}>
-            Reset
-          </Button>
+          <Button onClick={reset}>Reset</Button>
         </Grid>
       </header>
     </div>
